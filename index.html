@@ -170,7 +170,7 @@
             display: inline-block;
         }
 
-        /* --- PUZZLE GAME (Updated for dynamic photo) --- */
+        /* --- PUZZLE GAME (Restored to Tile-based) --- */
         .puzzle-container {
             width: 320px;
             max-width: 100%;
@@ -188,6 +188,11 @@
             transition: transform 0.6s cubic-bezier(0.34, 1.2, 0.64, 1);
         }
 
+        .puzzle-grid-wrap.revealing {
+            transform: scale(0.88);
+            transition: transform 0.4s cubic-bezier(0.34, 1.2, 0.64, 1);
+        }
+
         .puzzle-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -197,51 +202,65 @@
             height: 100%;
             position: absolute;
             inset: 0;
-            transition: gap 0.2s ease;
+            transition: gap 0.1s ease, padding 0.1s ease, border-radius 0.1s ease;
         }
 
         .puzzle-grid.merging { gap: 0; }
 
         .puzzle-tile {
-            background-size: 300% 300%; /* Important for 3x3 */
-            border-radius: 4px;
+            background-size: 100% 100%;
+            background-repeat: no-repeat;
+            background-position: center;
+            border-radius: 8px;
             cursor: pointer;
-            transition: transform 0.1s ease, box-shadow 0.1s ease;
-            box-shadow: inset 0 0 0 1px rgba(255,255,255,0.2);
+            transition: box-shadow 0.1s ease, border-radius 0.1s ease, transform 0.1s ease;
+            box-shadow: 0 0px 8px rgba(0,0,0,0.15);
+            position: relative;
+        }
+
+        .puzzle-tile:hover:not(.empty) {
+            transform: scale(1.01);
+            box-shadow: 0 0px 10px rgba(0,0,0,0.2);
+            z-index: 10;
+        }
+
+        .puzzle-grid.merging .puzzle-tile {
+            box-shadow: none;
+            border-radius: 0;
         }
 
         .puzzle-tile.empty {
             background-image: none !important;
-            background-color: #eee;
-            cursor: default;
             box-shadow: none;
+            cursor: default;
         }
 
         .puzzle-full-image-overlay {
             position: absolute;
             inset: 0;
-            border-radius: 4px;
+            border-radius: 8px;
             overflow: hidden;
             opacity: 0;
-            transition: opacity 0.4s ease;
+            transition: opacity 0.25s ease;
             pointer-events: none;
         }
 
-        .puzzle-full-image-overlay.show { opacity: 1; }
-        .puzzle-full-image-overlay img { width: 100%; height: 100%; object-fit: cover; }
+        .puzzle-full-image-overlay.show { opacity: 1; pointer-events: auto; }
+        .puzzle-full-image-overlay img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
         .puzzle-reveal-text {
             opacity: 0;
+            transition: opacity 0.35s ease 0.1s;
             margin-top: 20px;
-            transition: opacity 0.5s ease;
         }
+
         .puzzle-reveal-text.show { opacity: 1; }
 
         /* --- SNAKE GAME --- */
-        #snakeCanvas { background: #1a1a1a; border-radius: 16px; display: block; margin: 0 auto; max-width: 100%; }
+        #snakeCanvas { background: #1a1a1a; border-radius: 16px; display: block; margin: 0 auto; max-width: 100%; box-shadow: inset 0 0 20px rgba(0,0,0,0.5), 0 5px 15px rgba(255,133,161,0.2); }
         .snake-score-container { margin-bottom: 15px; font-weight: bold; color: #d63384; display: flex; justify-content: center; gap: 20px; }
         .controls { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; width: 180px; margin: 20px auto; }
-        .control-btn { background: white; color: #ff85a1; border: 2px solid #ff85a1; padding: 12px; border-radius: 12px; font-weight: bold; cursor: pointer; }
+        .control-btn { background: white; color: #ff85a1; border: 2px solid #ff85a1; padding: 12px; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 1.2em; }
 
         /* --- MEMORY GAME --- */
         .memory-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 20px; }
@@ -282,7 +301,7 @@
                     <span class="game-icon">🧩</span>
                     <div class="game-info">
                         <h3>Пазл-картинка</h3>
-                        <p>Пересувай плитки, щоб відкрити наше фото.</p>
+                        <p>Пересувай плитки, щоб відкрити повідомлення.</p>
                     </div>
                 </div>
                 <div class="game-card" onclick="startSnake()">
@@ -305,18 +324,18 @@
         <!-- PUZZLE VIEW -->
         <div id="puzzleView" class="view">
             <button class="btn-back" onclick="showMenu()">← Назад</button>
-            <h1 style="margin-bottom: 15px; font-size: 1.5em; color: #d63384;">Склади наше фото...</h1>
+            <h1 style="margin-bottom: 15px; font-size: 1.5em; color: #d63384;">Манюнічка моя...</h1>
             <div class="puzzle-container" id="puzzleContainer">
                 <div class="puzzle-grid-wrap" id="puzzleGridWrap">
                     <div class="puzzle-grid" id="puzzleGrid"></div>
                     <div class="puzzle-full-image-overlay" id="puzzleFullImageOverlay">
-                        <img src="image_783a3f.jpg" alt="Our Photo" />
+                        <img src="images/full-image.png" alt="" onerror="this.src='https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3ZhcXF6eHB6Z3B6Z3B6Z3B6Z3B6Z3B6JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1z/v6Z08WfX9oYxU0M3vO/giphy.gif'"/>
                     </div>
                 </div>
             </div>
             <div class="puzzle-reveal-text" id="puzzleRevealText">
-                <p style="color: #d63384; font-weight: bold; margin-bottom: 10px;">...ти мене доповнюєш.</p>
-                <button class="yes-btn" onclick="skipToQuestion()" style="font-size: 1em; padding: 10px 20px;">Перейти до питання</button>
+                <p style="font-size: 1.1em; color: #d63384; margin-bottom: 15px;">...ти мене доповнюєш.</p>
+                <button type="button" class="yes-btn" onclick="skipToQuestion()" style="font-size: 1em; padding: 10px 30px;">Подивитися головне питання</button>
             </div>
             <p class="skip-link" onclick="skipToQuestion()">Пропустити гру</p>
         </div>
@@ -366,7 +385,6 @@
 
     <script>
         const views = ['menuView', 'puzzleView', 'snakeView', 'memoryView', 'questionView', 'successView'];
-        const photoUrl = 'image_783a3f.jpg';
         
         function switchView(id) {
             views.forEach(v => document.getElementById(v).classList.remove('active'));
@@ -389,26 +407,29 @@
             }, 800);
         });
 
-        // --- PUZZLE LOGIC (Updated for image_783a3f.jpg) ---
-        const EMPTY_VAL = 3; // Piece at (0,2) is empty
+        // --- PUZZLE LOGIC (Restored to use image tiles from repo) ---
+        const EMPTY_PIECE = 3;
         const puzzleSolution = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-        let currentPuzzle = [...puzzleSolution];
+        let currentPuzzleState = [...puzzleSolution];
 
         function startPuzzle() {
             switchView('puzzleView');
+            document.getElementById('puzzleContainer').classList.remove('completed');
             document.getElementById('puzzleGrid').classList.remove('merging');
             document.getElementById('puzzleFullImageOverlay').classList.remove('show');
+            document.getElementById('puzzleGridWrap').classList.remove('revealing');
             document.getElementById('puzzleRevealText').classList.remove('show');
-            shufflePuzzle();
+            scramblePuzzle();
             renderPuzzle();
         }
 
-        function shufflePuzzle() {
-            for (let i = 0; i < 20; i++) {
-                const emptyIdx = currentPuzzle.indexOf(EMPTY_VAL);
-                const moves = getPuzzleMoves(emptyIdx);
+        function scramblePuzzle() {
+            currentPuzzleState = [...puzzleSolution];
+            for (let i = 0; i < 15; i++) {
+                const emptyIndex = currentPuzzleState.indexOf(EMPTY_PIECE);
+                const moves = getPuzzleMoves(emptyIndex);
                 const move = moves[Math.floor(Math.random() * moves.length)];
-                [currentPuzzle[emptyIdx], currentPuzzle[move]] = [currentPuzzle[move], currentPuzzle[emptyIdx]];
+                [currentPuzzleState[emptyIndex], currentPuzzleState[move]] = [currentPuzzleState[move], currentPuzzleState[emptyIndex]];
             }
         }
 
@@ -425,61 +446,69 @@
         function renderPuzzle() {
             const grid = document.getElementById('puzzleGrid');
             grid.innerHTML = '';
-            currentPuzzle.forEach((val, idx) => {
+            currentPuzzleState.forEach((piece, index) => {
                 const tile = document.createElement('div');
                 tile.className = 'puzzle-tile';
-                if (val === EMPTY_VAL) {
+                if (piece === EMPTY_PIECE) {
                     tile.classList.add('empty');
                 } else {
-                    // Map val to original coordinates to get background slice
-                    const origR = Math.floor((val - 1) / 3);
-                    const origC = (val - 1) % 3;
-                    tile.style.backgroundImage = `url(${photoUrl})`;
-                    tile.style.backgroundPosition = `${origC * 50}% ${origR * 50}%`;
-                    tile.onclick = () => moveTile(idx);
+                    tile.style.backgroundImage = `url('images/tile-${piece}.png')`;
+                    tile.onclick = () => movePuzzleTile(index);
                 }
                 grid.appendChild(tile);
             });
         }
 
-        function moveTile(idx) {
-            const emptyIdx = currentPuzzle.indexOf(EMPTY_VAL);
-            if (getPuzzleMoves(emptyIdx).includes(idx)) {
-                [currentPuzzle[emptyIdx], currentPuzzle[idx]] = [currentPuzzle[idx], currentPuzzle[emptyIdx]];
+        function movePuzzleTile(index) {
+            const emptyIndex = currentPuzzleState.indexOf(EMPTY_PIECE);
+            if (getPuzzleMoves(emptyIndex).includes(index)) {
+                [currentPuzzleState[emptyIndex], currentPuzzleState[index]] = [currentPuzzleState[index], currentPuzzleState[emptyIndex]];
                 renderPuzzle();
-                if (currentPuzzle.every((v, i) => v === puzzleSolution[i])) {
+                if (currentPuzzleState.every((v, i) => v === puzzleSolution[i])) {
                     setTimeout(onPuzzleSolved, 300);
                 }
             }
         }
 
         function onPuzzleSolved() {
+            const container = document.getElementById('puzzleContainer');
             const grid = document.getElementById('puzzleGrid');
+            const wrap = document.getElementById('puzzleGridWrap');
+            const text = document.getElementById('puzzleRevealText');
+            const overlay = document.getElementById('puzzleFullImageOverlay');
+            const emptyTile = grid.querySelector('.puzzle-tile.empty');
+            if (emptyTile) emptyTile.style.backgroundImage = "url('images/tile-3.png')";
+            
+            container.classList.add('completed');
             grid.classList.add('merging');
             setTimeout(() => {
-                document.getElementById('puzzleFullImageOverlay').classList.add('show');
-                document.getElementById('puzzleRevealText').classList.add('show');
-            }, 300);
+                overlay.classList.add('show');
+                setTimeout(() => {
+                    wrap.classList.add('revealing');
+                    text.classList.add('show');
+                }, 250);
+            }, 280);
         }
 
         // --- SNAKE LOGIC ---
-        let snake, food, snakeDir, snakeInterval, snakeScore, snakeSpeed;
-        const box = 20;
+        let snake, food, snakeDirection, snakeInterval, snakeScore, snakeSpeed;
+        let particles = [];
+        const boxSize = 20;
 
         function startSnake() {
             switchView('snakeView');
-            snake = [{x: 5*box, y: 5*box}, {x: 4*box, y: 5*box}];
+            snake = [{x: 5 * boxSize, y: 5 * boxSize}, {x: 4 * boxSize, y: 5 * boxSize}];
             spawnFood();
-            snakeDir = "right"; snakeScore = 0; snakeSpeed = 215;
-            updateSnakeUI();
+            snakeDirection = "right"; snakeScore = 0; snakeSpeed = 215;
+            particles = []; updateSnakeUI();
             if(snakeInterval) clearInterval(snakeInterval);
-            runSnake();
+            runSnakeLoop();
         }
         function spawnFood() {
-            food = { x: Math.floor(Math.random()*15)*box, y: Math.floor(Math.random()*15)*box };
+            food = { x: Math.floor(Math.random()*15)*boxSize, y: Math.floor(Math.random()*15)*boxSize };
             if(snake.some(p => p.x === food.x && p.y === food.y)) spawnFood();
         }
-        function runSnake() {
+        function runSnakeLoop() {
             if(snakeInterval) clearInterval(snakeInterval);
             snakeInterval = setInterval(drawSnake, snakeSpeed);
         }
@@ -488,27 +517,27 @@
             document.getElementById('snakeSpeed').innerText = (150/snakeSpeed).toFixed(1) + 'x';
         }
         function setSnakeDir(d) {
-            if(d==='up' && snakeDir!=='down') snakeDir='up';
-            if(d==='down' && snakeDir!=='up') snakeDir='down';
-            if(d==='left' && snakeDir!=='right') snakeDir='left';
-            if(d==='right' && snakeDir!=='left') snakeDir='right';
+            if(d==='up' && snakeDirection!=='down') snakeDirection='up';
+            if(d==='down' && snakeDirection!=='up') snakeDirection='down';
+            if(d==='left' && snakeDirection!=='right') snakeDirection='left';
+            if(d==='right' && snakeDirection!=='left') snakeDirection='right';
         }
         function drawSnake() {
             const canvas = document.getElementById('snakeCanvas');
             const ctx = canvas.getContext('2d');
             ctx.fillStyle = "#1a1a1a"; ctx.fillRect(0,0,300,300);
-            ctx.font = "20px Arial"; ctx.fillText("❤️", food.x, food.y+18);
+            ctx.font = "20px Arial"; ctx.textAlign = "left"; ctx.fillText("❤️", food.x, food.y+18);
             snake.forEach((p, i) => {
                 ctx.fillStyle = i===0 ? "#ff4d6d" : "#ff85a1";
-                ctx.fillRect(p.x+1, p.y+1, box-2, box-2);
+                ctx.fillRect(p.x+1, p.y+1, boxSize-2, boxSize-2);
             });
             let headX = snake[0].x, headY = snake[0].y;
-            if(snakeDir==="left") headX-=box; if(snakeDir==="up") headY-=box;
-            if(snakeDir==="right") headX+=box; if(snakeDir==="down") headY-=box;
+            if(snakeDirection==="left") headX-=boxSize; if(snakeDirection==="up") headY-=boxSize;
+            if(snakeDirection==="right") headX+=boxSize; if(snakeDirection==="down") headY+=boxSize;
             if(headX<0) headX=280; if(headX>280) headX=0; if(headY<0) headY=280; if(headY>280) headY=0;
             if(headX===food.x && headY===food.y) {
                 snakeScore++; spawnFood(); updateSnakeUI();
-                if(snakeSpeed>90) { snakeSpeed-=7; runSnake(); }
+                if(snakeSpeed>90) { snakeSpeed-=7; runSnakeLoop(); }
                 if(snakeScore>=10) { clearInterval(snakeInterval); setTimeout(skipToQuestion, 500); }
             } else { snake.pop(); }
             let newHead = {x: headX, y: headY};
