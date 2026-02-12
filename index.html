@@ -19,7 +19,7 @@
             justify-content: center;
             align-items: center;
             background: #FFDAE9;
-            overflow: hidden;
+            overflow-x: hidden;
             padding: 20px;
         }
 
@@ -48,7 +48,7 @@
             max-width: 550px;
             max-height: 94vh;
             overflow-y: auto;
-            overflow-x: hidden; /* Removes horizontal scrollbar */
+            overflow-x: hidden;
             position: relative;
             z-index: 10;
         }
@@ -225,11 +225,6 @@
             z-index: 10;
         }
 
-        .puzzle-grid.merging .puzzle-tile {
-            box-shadow: none;
-            border-radius: 0;
-        }
-
         .puzzle-tile.empty {
             background-image: none !important;
             box-shadow: none;
@@ -256,6 +251,29 @@
         }
 
         .puzzle-reveal-text.show { opacity: 1; }
+
+        .puzzle-controls {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .btn-small {
+            background: #f0f0f0;
+            border: 1px solid #ddd;
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            cursor: pointer;
+            color: #666;
+            transition: all 0.2s;
+        }
+
+        .btn-small:hover {
+            background: #e8e8e8;
+            color: #d63384;
+        }
 
         /* --- SNAKE GAME --- */
         #snakeCanvas { background: #1a1a1a; border-radius: 16px; display: block; margin: 0 auto; max-width: 100%; box-shadow: inset 0 0 20px rgba(0,0,0,0.5), 0 5px 15px rgba(255,133,161,0.2); }
@@ -290,7 +308,7 @@
             </div>
             <div class="envelope-flap"></div>
         </div>
-        <p style="margin-top: 20px; color: #d63384; font-weight: bold;">Відкрий мене!</p>
+        <p style="margin-top: 20px; color: #d63384; font-weight: bold;">Відкрий для сюрпризу!</p>
     </div>
 
     <div class="container">
@@ -330,9 +348,12 @@
                 <div class="puzzle-grid-wrap" id="puzzleGridWrap">
                     <div class="puzzle-grid" id="puzzleGrid"></div>
                     <div class="puzzle-full-image-overlay" id="puzzleFullImageOverlay">
-                        <img src="images/full-image.png" alt="" onerror="this.src='https://raw.githubusercontent.com/YevhenUa-no/myM/main/full-image.png'"/>
+                        <img src="images/full-image.png" alt="" onerror="this.src='https://raw.githubusercontent.com/YevhenUa-no/myM/main/giphy.gif'"/>
                     </div>
                 </div>
+            </div>
+            <div class="puzzle-controls">
+                <button class="btn-small" onclick="scramblePuzzle(10); renderPuzzle();">Спростити</button>
             </div>
             <div class="puzzle-reveal-text" id="puzzleRevealText">
                 <p style="font-size: 1.1em; color: #d63384; margin-bottom: 15px;">...ти мене доповнюєш.</p>
@@ -370,7 +391,7 @@
         <div id="questionView" class="view">
             <h1 style="color: #ff4d6d; margin-bottom: 10px;">Манюнічка моя...</h1>
             <p style="font-size: 1.1em; color: #666;">Чи будеш моєю МанюньВалентиною?</p>
-            <img src="image_6dc992.png" alt="Be my Valentine?" class="valentine-img" onerror="this.src='https://raw.githubusercontent.com/YevhenUa-no/myM/main/kiss.jpg'">
+            <img src="image_6dc992.png" alt="Be my Valentine?" class="valentine-img" onerror="this.src='https://raw.githubusercontent.com/YevhenUa-no/myM/main/giphy.gif'">
             <button class="yes-btn" onclick="celebrate()">ТАК! ❤️</button>
         </div>
 
@@ -379,7 +400,7 @@
             <div class="heart-anim">💖</div>
             <h1 style="color: #ff4d6d;">Цілую, сонечко!</h1>
             <p style="margin: 20px 0; font-size: 1.2em; font-weight: bold;">Бонус: я зробив нам гіфку 💖</p>
-            <img src="https://raw.githubusercontent.com/YevhenUa-no/myM/main/kiss4.gif" alt="Happy Celebration" class="success-gif">
+            <img src="https://raw.githubusercontent.com/YevhenUa-no/myM/main/kiss4.gif" alt="Happy Celebration" class="success-gif" onerror="this.src='https://raw.githubusercontent.com/YevhenUa-no/myM/main/giphy.gif'">
             <button class="btn-back" onclick="window.location.reload()">Скинути</button>
         </div>
     </div>
@@ -420,17 +441,22 @@
             document.getElementById('puzzleFullImageOverlay').classList.remove('show');
             document.getElementById('puzzleGridWrap').classList.remove('revealing');
             document.getElementById('puzzleRevealText').classList.remove('show');
-            scramblePuzzle();
+            scramblePuzzle(100); // Default high difficulty
             renderPuzzle();
         }
 
-        function scramblePuzzle() {
+        function scramblePuzzle(iterations) {
             currentPuzzleState = [...puzzleSolution];
-            for (let i = 0; i < 15; i++) {
+            let lastMove = -1;
+            for (let i = 0; i < iterations; i++) {
                 const emptyIndex = currentPuzzleState.indexOf(EMPTY_PIECE);
                 const moves = getPuzzleMoves(emptyIndex);
-                const move = moves[Math.floor(Math.random() * moves.length)];
+                // Filter out the last move to avoid immediate reversals
+                const filteredMoves = moves.filter(m => m !== lastMove);
+                const move = filteredMoves.length > 0 ? filteredMoves[Math.floor(Math.random() * filteredMoves.length)] : moves[Math.floor(Math.random() * moves.length)];
+                
                 [currentPuzzleState[emptyIndex], currentPuzzleState[move]] = [currentPuzzleState[move], currentPuzzleState[emptyIndex]];
+                lastMove = emptyIndex;
             }
         }
 
@@ -533,7 +559,10 @@
             });
             let headX = snake[0].x, headY = snake[0].y;
             if(snakeDirection==="left") headX-=boxSize; if(snakeDirection==="up") headY-=boxSize;
-            if(snakeDirection==="right") headX+=boxSize; if(snakeDirection==="down") headY-=boxSize;
+            if(snakeDirection==="right") headX+=boxSize; 
+            // FIX: down should increment Y
+            if(snakeDirection==="down") headY+=boxSize;
+
             if(headX<0) headX=280; if(headX>280) headX=0; if(headY<0) headY=280; if(headY>280) headY=0;
             if(headX===food.x && headY===food.y) {
                 snakeScore++; spawnFood(); updateSnakeUI();
@@ -550,7 +579,7 @@
             switchView('memoryView');
             const grid = document.getElementById('memoryGrid'); grid.innerHTML = '';
             let matches = 0, flipped = [];
-            const meats = ['🍗','🍣','🥩','🥓','🌭','🍔','🍆','🍝'];
+            const meats = ['🍗','🍖','🥩','🥓','🌭','🍔','🥪','🥘'];
             const deck = [...meats, ...meats].sort(()=>Math.random()-0.5);
             deck.forEach(emoji => {
                 const card = document.createElement('div'); card.className = 'memory-card';
@@ -570,7 +599,7 @@
         // --- CELEBRATION ---
         function celebrate() {
             switchView('successView');
-            for(let i=0; i<100; i++) setTimeout(createConfetti, i*20);
+            for(let i=0; i<100; i++) setTimeout(createConfetti, i * 20);
         }
         function createConfetti() {
             const c = document.createElement('div'); c.className = 'confetti';
