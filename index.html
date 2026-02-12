@@ -170,7 +170,7 @@
             display: inline-block;
         }
 
-        /* --- PUZZLE GAME (Restored to Tile-based) --- */
+        /* --- PUZZLE GAME --- */
         .puzzle-container {
             width: 320px;
             max-width: 100%;
@@ -329,7 +329,7 @@
                 <div class="puzzle-grid-wrap" id="puzzleGridWrap">
                     <div class="puzzle-grid" id="puzzleGrid"></div>
                     <div class="puzzle-full-image-overlay" id="puzzleFullImageOverlay">
-                        <img src="images/full-image.png" alt="" onerror="this.src='https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3ZhcXF6eHB6Z3B6Z3B6Z3B6Z3B6Z3B6JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1z/v6Z08WfX9oYxU0M3vO/giphy.gif'"/>
+                        <img src="images/full-image.png" alt="" onerror="this.src='https://raw.githubusercontent.com/YevhenUa-no/myM/main/giphy.gif'"/>
                     </div>
                 </div>
             </div>
@@ -369,7 +369,7 @@
         <div id="questionView" class="view">
             <h1 style="color: #ff4d6d; margin-bottom: 10px;">Манюнічка моя...</h1>
             <p style="font-size: 1.1em; color: #666;">Чи будеш моєю МанюньВалентиною?</p>
-            <img src="image_6dc992.png" alt="Be my Valentine?" class="valentine-img">
+            <img src="image_6dc992.png" alt="Be my Valentine?" class="valentine-img" onerror="this.src='https://raw.githubusercontent.com/YevhenUa-no/myM/main/giphy.gif'">
             <button class="yes-btn" onclick="celebrate()">ТАК! ❤️</button>
         </div>
 
@@ -378,7 +378,7 @@
             <div class="heart-anim">💖</div>
             <h1 style="color: #ff4d6d;">Ура! Я такий щасливий!</h1>
             <p style="margin: 20px 0; font-size: 1.2em; font-weight: bold;">Не можу дочекатися, щоб провести цей час із тобою!</p>
-            <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExZ3NidWptcTM1NmZhcG9pM2h1MGR6cnJ4enptZGF3ZzNwdm53N244NyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/L4lvBze9TfFv9K1K6h/giphy.gif" alt="Happy Dance" class="success-gif">
+            <img src="https://raw.githubusercontent.com/YevhenUa-no/myM/main/giphy.gif" alt="Happy Celebration" class="success-gif">
             <button class="btn-back" onclick="window.location.reload()">Скинути</button>
         </div>
     </div>
@@ -407,7 +407,7 @@
             }, 800);
         });
 
-        // --- PUZZLE LOGIC (Restored to use image tiles from repo) ---
+        // --- PUZZLE LOGIC ---
         const EMPTY_PIECE = 3;
         const puzzleSolution = [1, 2, 3, 4, 5, 6, 7, 8, 9];
         let currentPuzzleState = [...puzzleSolution];
@@ -492,7 +492,6 @@
 
         // --- SNAKE LOGIC ---
         let snake, food, snakeDirection, snakeInterval, snakeScore, snakeSpeed;
-        let particles = [];
         const boxSize = 20;
 
         function startSnake() {
@@ -500,7 +499,7 @@
             snake = [{x: 5 * boxSize, y: 5 * boxSize}, {x: 4 * boxSize, y: 5 * boxSize}];
             spawnFood();
             snakeDirection = "right"; snakeScore = 0; snakeSpeed = 215;
-            particles = []; updateSnakeUI();
+            updateSnakeUI();
             if(snakeInterval) clearInterval(snakeInterval);
             runSnakeLoop();
         }
