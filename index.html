@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="uk">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>❤️</title>
+    <title>❤️ Спеціальна доставка</title>
     <style>
         * {
             margin: 0;
@@ -19,24 +19,21 @@
             justify-content: center;
             align-items: center;
             background: #FFDAE9;
-            overflow: auto;
-            padding: 24px;
+            overflow: hidden;
+            padding: 20px;
         }
 
-        /* Envelope stage: no modal, just envelope on pink background */
+        /* --- STAGES --- */
         #envelopeStage {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-height: 100vh;
             position: fixed;
             inset: 0;
-            z-index: 10;
-        }
-
-        body.show-modal .container {
-            display: flex;
+            z-index: 100;
+            background: #FFDAE9;
+            transition: opacity 0.5s ease;
         }
 
         .container {
@@ -44,59 +41,36 @@
             flex-direction: column;
             text-align: center;
             background: white;
-            padding: 40px 36px;
-            border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            width: fit-content;
-            max-width: min(650px, calc(100vw - 48px));
-            min-width: 0;
-            min-height: 520px;
-            max-height: calc(100vh - 48px);
+            padding: 30px;
+            border-radius: 24px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            width: 100%;
+            max-width: 550px;
+            max-height: 94vh;
             overflow-y: auto;
             position: relative;
-            transform-origin: center center;
-            transition: opacity 0.25s ease, transform 0.3s ease;
+            z-index: 10;
         }
 
-        .modal-inner {
-            flex: 1 1 auto;
+        body.show-app .container {
             display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            min-height: 0;
-            width: fit-content;
-            max-width: 100%;
         }
 
-        .modal-view {
-            width: fit-content;
-            max-width: 100%;
-            opacity: 0;
-            transition: opacity 0.25s ease;
-            display: none;
-        }
-
-        .modal-view.visible {
-            display: block;
-            opacity: 1;
-        }
-
+        /* --- ENVELOPE --- */
         .envelope {
             position: relative;
-            width: 220px;
-            height: 160px;
+            width: 280px;
+            height: 180px;
             background: #f5e6d3;
             border: 1px solid #d4c4a8;
             border-radius: 4px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.12);
             cursor: pointer;
-            transition: transform 0.25s ease, box-shadow 0.25s ease;
+            transition: transform 0.25s ease;
         }
 
         .envelope:hover:not(.opening) {
             transform: scale(1.05);
-            box-shadow: 0 8px 28px rgba(0,0,0,0.15);
         }
 
         .envelope-flap {
@@ -109,20 +83,7 @@
             clip-path: polygon(0 0, 50% 50%, 100% 0);
             transform-origin: top center;
             transition: transform 0.8s cubic-bezier(0.34, 1.2, 0.64, 1);
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-
-        .envelope-flap-outline {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-        }
-
-        .envelope-flap-outline line {
-            vector-effect: non-scaling-stroke;
+            z-index: 2;
         }
 
         .envelope.opening .envelope-flap {
@@ -134,78 +95,89 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 40px;
-            height: 40px;
+            width: 50px;
+            height: 50px;
             color: #c41e3a;
-            pointer-events: none;
-            z-index: 1;
-            transition: opacity 0.35s ease;
+            z-index: 3;
+            transition: opacity 0.3s ease;
         }
 
-        .envelope-heart.hidden {
-            opacity: 0;
+        /* --- MENU --- */
+        .menu-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin-top: 20px;
         }
 
-        .envelope-heart svg {
-            width: 100%;
-            height: 100%;
+        .game-card {
+            background: #fff0f5;
+            padding: 20px;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 2px solid transparent;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            text-align: left;
         }
 
-        @media (min-width: 768px) {
-            .envelope {
-                width: 300px;
-                height: 218px;
-            }
-            .envelope-heart {
-                width: 52px;
-                height: 52px;
-            }
+        .game-card:hover {
+            background: #ffe4ee;
+            border-color: #ff85a1;
+            transform: translateY(-2px);
         }
 
-        @media (min-width: 1024px) {
-            .envelope {
-                width: 340px;
-                height: 247px;
-            }
-            .envelope-heart {
-                width: 58px;
-                height: 58px;
-            }
+        .game-icon {
+            font-size: 2.2em;
+            min-width: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
-        .envelope-stage-fade-out {
-            animation: envelopeFadeOut 0.5s ease forwards;
+        .game-info h3 {
+            font-size: 1.1em;
+            margin-bottom: 4px;
+            color: #d63384;
         }
 
-        .puzzle-stage-fade-in {
-            animation: fadeIn 0.6s ease forwards;
+        .game-info p {
+            font-size: 0.85em;
+            color: #666;
+            line-height: 1.3;
         }
 
-        @keyframes envelopeFadeOut {
-            to { opacity: 0; transform: scale(0.96); }
+        /* --- COMMON ELEMENTS --- */
+        .view { display: none; }
+        .view.active { display: block; }
+        .btn-back {
+            background: #eee;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            margin-bottom: 20px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+        .skip-link {
+            font-size: 0.75em;
+            color: #aaa;
+            text-decoration: underline;
+            cursor: pointer;
+            margin-top: 25px;
+            display: inline-block;
         }
 
-        .modal-view .modal-title {
-            font-size: 24px;
-            color: #111;
-            font-weight: 500;
-            line-height: 1.4;
-            margin-top: 16px;
-            margin-bottom: 32px;
-        }
-
+        /* --- PUZZLE GAME (Updated for dynamic photo) --- */
         .puzzle-container {
-            width: 40vh;
+            width: 320px;
             max-width: 100%;
             margin: 0 auto;
             background: #f5f5f5;
             padding: 10px;
             border-radius: 12px;
-            transition: background 0.4s ease;
-        }
-
-        .puzzle-container.completed {
-            background: #fff;
         }
 
         .puzzle-grid-wrap {
@@ -216,614 +188,375 @@
             transition: transform 0.6s cubic-bezier(0.34, 1.2, 0.64, 1);
         }
 
-        .puzzle-grid-wrap.revealing {
-            transform: scale(0.88);
-            transition: transform 0.4s cubic-bezier(0.34, 1.2, 0.64, 1);
-        }
-
         .puzzle-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             grid-template-rows: repeat(3, 1fr);
             gap: 2px;
-            background: transparent;
-            padding: 0;
-            border-radius: 8px;
             width: 100%;
             height: 100%;
             position: absolute;
             inset: 0;
-            transition: gap 0.1s ease, padding 0.1s ease, border-radius 0.1s ease;
+            transition: gap 0.2s ease;
         }
 
-        .puzzle-grid.merging {
-            gap: 0;
-            padding: 0;
-            border-radius: 0;
-        }
+        .puzzle-grid.merging { gap: 0; }
 
         .puzzle-tile {
-            min-width: 0;
-            min-height: 0;
-            background-size: 100% 100%;
-            background-repeat: no-repeat;
-            background-position: center;
-            border-radius: 8px;
+            background-size: 300% 300%; /* Important for 3x3 */
+            border-radius: 4px;
             cursor: pointer;
-            transition: box-shadow 0.1s ease, border-radius 0.1s ease, transform 0.1s ease;
-            box-shadow: 0 0px 8px rgba(0,0,0,0.15);
-            position: relative;
-        }
-
-        .puzzle-tile:hover:not(.empty) {
-            transform: scale(1.01);
-            box-shadow: 0 0px 10px rgba(0,0,0,0.2);
-            z-index: 10;
-        }
-
-        .puzzle-grid.merging .puzzle-tile {
-            box-shadow: none;
-            border-radius: 0;
+            transition: transform 0.1s ease, box-shadow 0.1s ease;
+            box-shadow: inset 0 0 0 1px rgba(255,255,255,0.2);
         }
 
         .puzzle-tile.empty {
-            box-shadow: none;
+            background-image: none !important;
+            background-color: #eee;
             cursor: default;
+            box-shadow: none;
         }
 
         .puzzle-full-image-overlay {
             position: absolute;
             inset: 0;
-            border-radius: 8px;
+            border-radius: 4px;
             overflow: hidden;
             opacity: 0;
-            transition: opacity 0.25s ease;
+            transition: opacity 0.4s ease;
             pointer-events: none;
         }
 
-        .puzzle-full-image-overlay.show {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        .puzzle-full-image-overlay img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-        }
-
-        .puzzle-tile.empty:hover {
-            transform: none;
-        }
+        .puzzle-full-image-overlay.show { opacity: 1; }
+        .puzzle-full-image-overlay img { width: 100%; height: 100%; object-fit: cover; }
 
         .puzzle-reveal-text {
             opacity: 0;
-            transition: opacity 0.35s ease 0.1s;
             margin-top: 20px;
+            transition: opacity 0.5s ease;
         }
+        .puzzle-reveal-text.show { opacity: 1; }
 
-        .puzzle-reveal-text.show {
-            opacity: 1;
-        }
+        /* --- SNAKE GAME --- */
+        #snakeCanvas { background: #1a1a1a; border-radius: 16px; display: block; margin: 0 auto; max-width: 100%; }
+        .snake-score-container { margin-bottom: 15px; font-weight: bold; color: #d63384; display: flex; justify-content: center; gap: 20px; }
+        .controls { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; width: 180px; margin: 20px auto; }
+        .control-btn { background: white; color: #ff85a1; border: 2px solid #ff85a1; padding: 12px; border-radius: 12px; font-weight: bold; cursor: pointer; }
 
-        .puzzle-reveal-text .complete-line {
-            font-size: 20px;
-            color: #111;
-            margin-bottom: 12px;
-            line-height: 1.4;
-        }
+        /* --- MEMORY GAME --- */
+        .memory-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 20px; }
+        .memory-card { aspect-ratio: 1; background: #ff85a1; border-radius: 8px; display: flex; justify-content: center; align-items: center; font-size: 2em; cursor: pointer; transition: transform 0.3s; transform-style: preserve-3d; position: relative; }
+        .memory-card.flipped { transform: rotateY(180deg); }
+        .memory-card .back, .memory-card .front { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; display: flex; justify-content: center; align-items: center; border-radius: 8px; }
+        .memory-card .front { background: #fff; transform: rotateY(180deg); border: 2px solid #ff85a1; }
 
-        .puzzle-reveal-text .valentine-question {
-            font-size: 20px;
-            color: #111;
-            font-weight: 600;
-            margin-bottom: 16px;
-        }
+        /* --- FINAL VIEWS --- */
+        .valentine-img { width: 100%; max-width: 320px; border-radius: 12px; margin: 15px auto; display: block; }
+        .yes-btn { background: #ff4d6d; color: white; border: none; padding: 15px 45px; font-size: 1.4em; border-radius: 50px; cursor: pointer; margin-top: 15px; font-weight: bold; }
+        .success-gif { width: 100%; max-width: 400px; border-radius: 16px; margin: 20px auto; display: block; }
+        .heart-anim { font-size: 3em; animation: heartBeat 1.2s infinite; }
+        @keyframes heartBeat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.15); } }
 
-        .shuffle-button {
-            margin-top: 20px;
-            padding: 10px 25px;
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            color: white;
-            border: none;
-            border-radius: 25px;
-            font-size: 1em;
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.3s ease;
-        }
-
-        .shuffle-button:hover {
-            transform: scale(1.05);
-            box-shadow: 0 5px 15px rgba(245, 87, 108, 0.4);
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.98); }
-            to { opacity: 1; transform: scale(1); }
-        }
-
-        .heart {
-            font-size: 4em;
-            margin: 20px 0;
-            animation: heartbeat 1.5s ease-in-out infinite;
-        }
-
-        @keyframes heartbeat {
-            0%, 100% { transform: scale(1); }
-            25% { transform: scale(1.1); }
-        }
-
-
-        .confetti {
-            position: fixed;
-            width: 10px;
-            height: 10px;
-            pointer-events: none;
-        }
-
-        @keyframes confetti-fall {
-            to {
-                transform: translateY(100vh) rotate(360deg);
-                opacity: 0;
-            }
-        }
-
-        .sparkle {
-            position: fixed;
-            width: 6px;
-            height: 6px;
-            background: white;
-            border-radius: 50%;
-            pointer-events: none;
-            animation: sparkleAnim 1s ease-out;
-        }
-
-        @keyframes sparkleAnim {
-            0% {
-                transform: scale(0) rotate(0deg);
-                opacity: 1;
-            }
-            100% {
-                transform: scale(1) rotate(180deg);
-                opacity: 0;
-            }
-        }
-
-        /* Celebration effect when puzzle solved */
-        @keyframes tileDisappear {
-            0% {
-                opacity: 1;
-                transform: scale(1) rotate(0deg);
-            }
-            100% {
-                opacity: 0;
-                transform: scale(0.5) rotate(180deg);
-            }
-        }
-
-        .tile-disappear {
-            animation: tileDisappear 0.5s ease forwards;
-        }
-
-        /* Base Yes button: defined before media queries so responsive font-size overrides apply */
-        .yes-only-btn {
-            font-size: 20px;
-            padding: 12px 24px;
-            background: #FFDAE9;
-            color: #333;
-            border: 1px solid rgba(0,0,0,0.1);
-            border-radius: 50px;
-            cursor: pointer;
-            margin-top: 8px;
-            font-weight: 600;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-
-        .yes-only-btn:hover {
-            transform: scale(1.02);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-
-        @media (max-width: 600px) {
-            body {
-                padding: 16px;
-            }
-            .container {
-                padding: 20px 36px;
-                max-width: 94%;
-                min-height: 420px;
-            }
-            .modal-view .modal-title {
-                font-size: 20px;
-            }
-            .puzzle-reveal-text .complete-line,
-            .puzzle-reveal-text .valentine-question {
-                font-size: 18px;
-            }
-            .yes-only-btn {
-                font-size: 18px;
-            }
-            .success-yay {
-                font-size: 20px;
-            }
-            .puzzle-container {
-                max-width: min(360px, 40vh);
-            }
-        }
-
-        @media (max-width: 420px) {
-            body {
-                padding: 12px;
-            }
-            .container {
-                padding: 16px 36px;
-                max-width: 96%;
-                min-height: 380px;
-            }
-            .modal-view .modal-title {
-                font-size: 18px;
-            }
-            .puzzle-reveal-text .complete-line,
-            .puzzle-reveal-text .valentine-question {
-                font-size: 16px;
-            }
-            .yes-only-btn {
-                font-size: 16px;
-            }
-            .success-yay {
-                font-size: 18px;
-            }
-            .puzzle-container {
-                max-width: min(280px, 40vh);
-            }
-        }
-
-        @media (max-width: 360px) {
-            body {
-                padding: 10px;
-            }
-            .container {
-                padding: 12px 36px;
-                min-height: 340px;
-            }
-            .modal-view .modal-title {
-                font-size: 16px;
-            }
-            .puzzle-reveal-text .complete-line,
-            .puzzle-reveal-text .valentine-question {
-                font-size: 14px;
-            }
-            .yes-only-btn {
-                font-size: 14px;
-            }
-            .success-yay {
-                font-size: 16px;
-            }
-            .puzzle-container {
-                max-width: min(240px, 40vh);
-            }
-        }
-
-        /* Short viewport: shrink contents to respect padding / prevent overflow */
-        @media (max-height: 800px) {
-            body {
-                padding: 14px;
-            }
-            .container {
-                transform: scale(0.95);
-                transform-origin: center center;
-                padding: 22px 36px;
-            }
-        }
-        @media (max-height: 700px) {
-            body {
-                padding: 12px;
-            }
-            .container {
-                transform: scale(0.85);
-                transform-origin: center center;
-                padding: 20px 36px;
-            }
-        }
-        @media (max-height: 600px) {
-            .container {
-                transform: scale(0.72);
-                padding: 16px 36px;
-            }
-        }
-        @media (max-height: 500px) {
-            .container {
-                transform: scale(0.6);
-                padding: 12px 36px;
-            }
-        }
-        @media (max-height: 420px) {
-            .container {
-                transform: scale(0.5);
-                padding: 10px 36px;
-            }
-        }
-        /* Short and narrow: apply stronger scale so content fits */
-        @media (max-height: 600px) and (max-width: 480px) {
-            .container {
-                transform: scale(0.65);
-                padding: 12px 36px;
-            }
-        }
-        @media (max-height: 500px) and (max-width: 420px) {
-            .container {
-                transform: scale(0.55);
-                padding: 10px 36px;
-            }
-        }
-
-        /* Success view: no modal card, content on pink background only */
-        .container.container--success {
-            background: transparent;
-            box-shadow: none;
-            padding: 24px;
-        }
-
-        /* Success: Yay + gif + Reset */
-        .success-yay {
-            font-size: 24px;
-            font-weight: 600;
-            color: #111;
-            margin-bottom: 20px;
-        }
-
-        .success-gif-wrap {
-            margin: 0 auto 24px;
-            border-radius: 12px;
-            overflow: hidden;
-            max-width: 420px;
-        }
-
-        .success-gif-wrap img {
-            display: block;
-            width: 100%;
-            height: auto;
-        }
-
-        .reset-btn {
-            background: none;
-            border: none;
-            color: #666;
-            font-size: 0.9em;
-            cursor: pointer;
-            text-decoration: underline;
-            padding: 8px 12px;
-            margin-top: 8px;
-            font-family: inherit;
-        }
-
-        .reset-btn:hover {
-            color: #111;
-        }
-
+        .confetti { position: fixed; width: 10px; height: 10px; background: #ff4d6d; pointer-events: none; z-index: 1000; }
+        .hidden { display: none !important; }
     </style>
 </head>
 <body>
-    <!-- ENVELOPE: no modal, just envelope on pink background -->
+
     <div id="envelopeStage">
         <div class="envelope" id="envelope">
-            <div class="envelope-heart" aria-hidden="true">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z" clip-rule="evenodd" /></svg>
+            <div class="envelope-heart">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z"/></svg>
             </div>
-            <div class="envelope-flap">
-                <svg class="envelope-flap-outline" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-                    <line x1="0" y1="0" x2="50" y2="50" stroke="#d4c4a8" stroke-width="3" vector-effect="non-scaling-stroke" />
-                    <line x1="50" y1="50" x2="100" y2="0" stroke="#d4c4a8" stroke-width="3" vector-effect="non-scaling-stroke" />
-                </svg>
-            </div>
+            <div class="envelope-flap"></div>
         </div>
+        <p style="margin-top: 20px; color: #d63384; font-weight: bold;">Відкрий для сюрпризу!</p>
     </div>
 
     <div class="container">
-        <div class="modal-inner">
-            <!-- VIEW: Puzzle (playing + completed state in same view) -->
-            <div id="puzzleView" class="modal-view">
-                <h1 class="modal-title">Манюнічка моя...</h1>
-                <div class="puzzle-container" id="puzzleContainer">
-                    <div class="puzzle-grid-wrap" id="puzzleGridWrap">
-                        <div class="puzzle-grid" id="puzzleGrid"></div>
-                        <div class="puzzle-full-image-overlay" id="puzzleFullImageOverlay">
-                            <img src="images/full-image.png" alt="" />
-                        </div>
+        <!-- MENU -->
+        <div id="menuView" class="view active">
+            <h2 style="color: #d63384; margin-bottom: 20px;">Спочатку пограй у гру! ❤️</h2>
+            <div class="menu-grid">
+                <div class="game-card" onclick="startPuzzle()">
+                    <span class="game-icon">🧩</span>
+                    <div class="game-info">
+                        <h3>Пазл-картинка</h3>
+                        <p>Пересувай плитки, щоб відкрити наше фото.</p>
                     </div>
                 </div>
-                <div class="puzzle-reveal-text" id="puzzleRevealText">
-                    <p class="complete-line">...you complete me.</p>
-                    <p class="valentine-question">Will you be my Valentine?</p>
-                    <button type="button" class="yes-only-btn" id="yesBtn">Yes</button>
+                <div class="game-card" onclick="startSnake()">
+                    <span class="game-icon">🐍</span>
+                    <div class="game-info">
+                        <h3>Гра Змійка</h3>
+                        <p>Їж сердечка, щоб рости!</p>
+                    </div>
+                </div>
+                <div class="game-card" onclick="startMemory()">
+                    <span class="game-icon">🍖</span>
+                    <div class="game-info">
+                        <h3>М'ясна пара</h3>
+                        <p>Знайди пари улюблених страв.</p>
+                    </div>
                 </div>
             </div>
+        </div>
 
-            <!-- VIEW: Success -->
-            <div id="successView" class="modal-view">
-                <p class="modal-title">Yay, I can't wait!</p>
-                <div class="success-gif-wrap">
-                    <img src="giphy.gif" alt="" />
+        <!-- PUZZLE VIEW -->
+        <div id="puzzleView" class="view">
+            <button class="btn-back" onclick="showMenu()">← Назад</button>
+            <h1 style="margin-bottom: 15px; font-size: 1.5em; color: #d63384;">Склади наше фото...</h1>
+            <div class="puzzle-container" id="puzzleContainer">
+                <div class="puzzle-grid-wrap" id="puzzleGridWrap">
+                    <div class="puzzle-grid" id="puzzleGrid"></div>
+                    <div class="puzzle-full-image-overlay" id="puzzleFullImageOverlay">
+                        <img src="image_783a3f.jpg" alt="Our Photo" />
+                    </div>
                 </div>
-                <button type="button" class="reset-btn" id="resetBtn">Reset</button>
             </div>
+            <div class="puzzle-reveal-text" id="puzzleRevealText">
+                <p style="color: #d63384; font-weight: bold; margin-bottom: 10px;">...ти мене доповнюєш.</p>
+                <button class="yes-btn" onclick="skipToQuestion()" style="font-size: 1em; padding: 10px 20px;">Перейти до питання</button>
+            </div>
+            <p class="skip-link" onclick="skipToQuestion()">Пропустити гру</p>
+        </div>
+
+        <!-- SNAKE VIEW -->
+        <div id="snakeView" class="view">
+            <button class="btn-back" onclick="showMenu()">← Назад</button>
+            <div class="snake-score-container">
+                <span>Рахунок: <span id="snakeScore">0</span> / 10</span>
+                <span>Швидкість: <span id="snakeSpeed">0.7x</span></span>
+            </div>
+            <canvas id="snakeCanvas" width="300" height="300"></canvas>
+            <div class="controls">
+                <div></div><button class="control-btn" onclick="setSnakeDir('up')">▲</button><div></div>
+                <button class="control-btn" onclick="setSnakeDir('left')">◀</button>
+                <button class="control-btn" onclick="setSnakeDir('down')">▼</button>
+                <button class="control-btn" onclick="setSnakeDir('right')">▶</button>
+            </div>
+            <p class="skip-link" onclick="skipToQuestion()">Пропустити гру</p>
+        </div>
+
+        <!-- MEMORY VIEW -->
+        <div id="memoryView" class="view">
+            <button class="btn-back" onclick="showMenu()">← Назад</button>
+            <h3 style="color: #d63384;">Знайди всі м'ясні пари!</h3>
+            <div class="memory-grid" id="memoryGrid"></div>
+            <p class="skip-link" onclick="skipToQuestion()">Пропустити гру</p>
+        </div>
+
+        <!-- QUESTION VIEW -->
+        <div id="questionView" class="view">
+            <h1 style="color: #ff4d6d; margin-bottom: 10px;">Манюнічка моя...</h1>
+            <p style="font-size: 1.1em; color: #666;">Чи будеш моєю МанюньВалентиною?</p>
+            <img src="image_6dc992.png" alt="Be my Valentine?" class="valentine-img">
+            <button class="yes-btn" onclick="celebrate()">ТАК! ❤️</button>
+        </div>
+
+        <!-- SUCCESS VIEW -->
+        <div id="successView" class="view">
+            <div class="heart-anim">💖</div>
+            <h1 style="color: #ff4d6d;">Ура! Я такий щасливий!</h1>
+            <p style="margin: 20px 0; font-size: 1.2em; font-weight: bold;">Не можу дочекатися, щоб провести цей час із тобою!</p>
+            <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExZ3NidWptcTM1NmZhcG9pM2h1MGR6cnJ4enptZGF3ZzNwdm53N244NyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/L4lvBze9TfFv9K1K6h/giphy.gif" alt="Happy Dance" class="success-gif">
+            <button class="btn-back" onclick="window.location.reload()">Скинути</button>
         </div>
     </div>
 
     <script>
-        // ENVELOPE → MODAL (one modal, two views: puzzle + success)
-        const envelopeStage = document.getElementById('envelopeStage');
-        const envelope = document.getElementById('envelope');
-        const puzzleGrid = document.getElementById('puzzleGrid');
-        const puzzleView = document.getElementById('puzzleView');
-        const successView = document.getElementById('successView');
+        const views = ['menuView', 'puzzleView', 'snakeView', 'memoryView', 'questionView', 'successView'];
+        const photoUrl = 'image_783a3f.jpg';
         
-        envelope.addEventListener('click', () => {
-            envelope.style.pointerEvents = 'none';
-            const heart = envelope.querySelector('.envelope-heart');
-            heart.classList.add('hidden');
+        function switchView(id) {
+            views.forEach(v => document.getElementById(v).classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+        }
+
+        function showMenu() { if(snakeInterval) clearInterval(snakeInterval); switchView('menuView'); }
+        function skipToQuestion() { if(snakeInterval) clearInterval(snakeInterval); switchView('questionView'); }
+
+        // Envelope
+        document.getElementById('envelope').addEventListener('click', function() {
+            this.classList.add('opening');
             setTimeout(() => {
-                envelope.classList.add('opening');
+                document.getElementById('envelopeStage').style.opacity = '0';
                 setTimeout(() => {
-                    envelopeStage.classList.add('envelope-stage-fade-out');
-                    setTimeout(() => {
-                        envelopeStage.style.display = 'none';
-                        document.body.classList.add('show-modal');
-                        requestAnimationFrame(() => {
-                            requestAnimationFrame(() => puzzleView.classList.add('visible'));
-                        });
-                    }, 450);
-                }, 700);
-            }, 380);
+                    document.getElementById('envelopeStage').classList.add('hidden');
+                    document.body.classList.add('show-app');
+                    switchView('menuView');
+                }, 500);
+            }, 800);
         });
-        
-        let tiles = [];
-        
-        // 3x3 puzzle: pieces 1–9, empty piece is 3 (top-right).
-        const EMPTY_PIECE = 3;
-        const solution = [1, 2, 3, 4, 5, 6, 7, 8, 9]; // empty (3) at index 2 = top-right
-        let currentState = [...solution];
-        
-        function initPuzzle() {
-            scramblePuzzle();
+
+        // --- PUZZLE LOGIC (Updated for image_783a3f.jpg) ---
+        const EMPTY_VAL = 3; // Piece at (0,2) is empty
+        const puzzleSolution = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+        let currentPuzzle = [...puzzleSolution];
+
+        function startPuzzle() {
+            switchView('puzzleView');
+            document.getElementById('puzzleGrid').classList.remove('merging');
+            document.getElementById('puzzleFullImageOverlay').classList.remove('show');
+            document.getElementById('puzzleRevealText').classList.remove('show');
+            shufflePuzzle();
             renderPuzzle();
         }
-        
-        function scramblePuzzle() {
-            // TESTING NOTE: Use "i < 1" instead of "i < 10" so that the puzzle is one move away from completion
-            for (let i = 0; i < 10; i++) {
-                const emptyIndex = currentState.indexOf(EMPTY_PIECE);
-                const validMoves = getValidMoves(emptyIndex);
-                const randomMove = validMoves[Math.floor(Math.random() * validMoves.length)];
-                [currentState[emptyIndex], currentState[randomMove]] = [currentState[randomMove], currentState[emptyIndex]];
+
+        function shufflePuzzle() {
+            for (let i = 0; i < 20; i++) {
+                const emptyIdx = currentPuzzle.indexOf(EMPTY_VAL);
+                const moves = getPuzzleMoves(emptyIdx);
+                const move = moves[Math.floor(Math.random() * moves.length)];
+                [currentPuzzle[emptyIdx], currentPuzzle[move]] = [currentPuzzle[move], currentPuzzle[emptyIdx]];
             }
         }
-        
-        function getValidMoves(emptyIndex) {
-            const validMoves = [];
-            const row = Math.floor(emptyIndex / 3);
-            const col = emptyIndex % 3;
-            
-            if (row > 0) validMoves.push(emptyIndex - 3);
-            if (row < 2) validMoves.push(emptyIndex + 3);
-            if (col > 0) validMoves.push(emptyIndex - 1);
-            if (col < 2) validMoves.push(emptyIndex + 1);
-            
-            return validMoves;
+
+        function getPuzzleMoves(idx) {
+            const moves = [];
+            const r = Math.floor(idx / 3), c = idx % 3;
+            if (r > 0) moves.push(idx - 3);
+            if (r < 2) moves.push(idx + 3);
+            if (c > 0) moves.push(idx - 1);
+            if (c < 2) moves.push(idx + 1);
+            return moves;
         }
-        
+
         function renderPuzzle() {
-            puzzleGrid.innerHTML = '';
-            tiles = [];
-            
-            currentState.forEach((piece, index) => {
+            const grid = document.getElementById('puzzleGrid');
+            grid.innerHTML = '';
+            currentPuzzle.forEach((val, idx) => {
                 const tile = document.createElement('div');
                 tile.className = 'puzzle-tile';
-                
-                if (piece === EMPTY_PIECE) {
+                if (val === EMPTY_VAL) {
                     tile.classList.add('empty');
-                    // No image: empty space is transparent until puzzle is solved
                 } else {
-                    tile.style.backgroundImage = `url('images/tile-${piece}.png')`;
-                    tile.onclick = () => moveTile(index);
+                    // Map val to original coordinates to get background slice
+                    const origR = Math.floor((val - 1) / 3);
+                    const origC = (val - 1) % 3;
+                    tile.style.backgroundImage = `url(${photoUrl})`;
+                    tile.style.backgroundPosition = `${origC * 50}% ${origR * 50}%`;
+                    tile.onclick = () => moveTile(idx);
                 }
-                
-                puzzleGrid.appendChild(tile);
-                tiles.push(tile);
+                grid.appendChild(tile);
             });
         }
-        
-        function moveTile(index) {
-            const emptyIndex = currentState.indexOf(EMPTY_PIECE);
-            const validMoves = getValidMoves(emptyIndex);
-            
-            if (validMoves.includes(index)) {
-                [currentState[emptyIndex], currentState[index]] = [currentState[index], currentState[emptyIndex]];
+
+        function moveTile(idx) {
+            const emptyIdx = currentPuzzle.indexOf(EMPTY_VAL);
+            if (getPuzzleMoves(emptyIdx).includes(idx)) {
+                [currentPuzzle[emptyIdx], currentPuzzle[idx]] = [currentPuzzle[idx], currentPuzzle[emptyIdx]];
                 renderPuzzle();
-                
-                // Check if solved
-                if (isPuzzleSolved()) {
+                if (currentPuzzle.every((v, i) => v === puzzleSolution[i])) {
                     setTimeout(onPuzzleSolved, 300);
                 }
             }
         }
-        
-        function isPuzzleSolved() {
-            return currentState.every((tile, index) => tile === solution[index]);
-        }
-        
+
         function onPuzzleSolved() {
-            const puzzleContainer = document.getElementById('puzzleContainer');
-            const puzzleGridWrap = document.getElementById('puzzleGridWrap');
-            const puzzleRevealText = document.getElementById('puzzleRevealText');
-            const puzzleFullImageOverlay = document.getElementById('puzzleFullImageOverlay');
-            const emptyTile = puzzleGrid.querySelector('.puzzle-tile.empty');
-            if (emptyTile) emptyTile.style.backgroundImage = "url('images/tile-3.png')";
-            puzzleContainer.classList.add('completed');
-            puzzleGrid.classList.add('merging');
+            const grid = document.getElementById('puzzleGrid');
+            grid.classList.add('merging');
             setTimeout(() => {
-                puzzleFullImageOverlay.classList.add('show');
-                setTimeout(() => {
-                    puzzleGridWrap.classList.add('revealing');
-                    puzzleRevealText.classList.add('show');
-                }, 250);
-            }, 280);
+                document.getElementById('puzzleFullImageOverlay').classList.add('show');
+                document.getElementById('puzzleRevealText').classList.add('show');
+            }, 300);
         }
-        
-        function createSparkles(x, y) {
-            for (let i = 0; i < 5; i++) {
-                setTimeout(() => {
-                    const sparkle = document.createElement('div');
-                    sparkle.className = 'sparkle';
-                    sparkle.style.left = x + (Math.random() - 0.5) * 50 + 'px';
-                    sparkle.style.top = y + (Math.random() - 0.5) * 50 + 'px';
-                    sparkle.style.background = ['#f093fb', '#f5576c', '#ffd700'][Math.floor(Math.random() * 3)];
-                    document.body.appendChild(sparkle);
-                    setTimeout(() => sparkle.remove(), 1000);
-                }, i * 50);
-            }
+
+        // --- SNAKE LOGIC ---
+        let snake, food, snakeDir, snakeInterval, snakeScore, snakeSpeed;
+        const box = 20;
+
+        function startSnake() {
+            switchView('snakeView');
+            snake = [{x: 5*box, y: 5*box}, {x: 4*box, y: 5*box}];
+            spawnFood();
+            snakeDir = "right"; snakeScore = 0; snakeSpeed = 215;
+            updateSnakeUI();
+            if(snakeInterval) clearInterval(snakeInterval);
+            runSnake();
         }
-        
-        initPuzzle();
-        
-        const container = document.querySelector('.container');
-        document.getElementById('yesBtn').addEventListener('click', () => {
-            runConfettiFor(10000);
-            container.classList.add('container--success');
-            puzzleView.classList.remove('visible');
-            requestAnimationFrame(() => {
-                requestAnimationFrame(() => successView.classList.add('visible'));
+        function spawnFood() {
+            food = { x: Math.floor(Math.random()*15)*box, y: Math.floor(Math.random()*15)*box };
+            if(snake.some(p => p.x === food.x && p.y === food.y)) spawnFood();
+        }
+        function runSnake() {
+            if(snakeInterval) clearInterval(snakeInterval);
+            snakeInterval = setInterval(drawSnake, snakeSpeed);
+        }
+        function updateSnakeUI() {
+            document.getElementById('snakeScore').innerText = snakeScore;
+            document.getElementById('snakeSpeed').innerText = (150/snakeSpeed).toFixed(1) + 'x';
+        }
+        function setSnakeDir(d) {
+            if(d==='up' && snakeDir!=='down') snakeDir='up';
+            if(d==='down' && snakeDir!=='up') snakeDir='down';
+            if(d==='left' && snakeDir!=='right') snakeDir='left';
+            if(d==='right' && snakeDir!=='left') snakeDir='right';
+        }
+        function drawSnake() {
+            const canvas = document.getElementById('snakeCanvas');
+            const ctx = canvas.getContext('2d');
+            ctx.fillStyle = "#1a1a1a"; ctx.fillRect(0,0,300,300);
+            ctx.font = "20px Arial"; ctx.fillText("❤️", food.x, food.y+18);
+            snake.forEach((p, i) => {
+                ctx.fillStyle = i===0 ? "#ff4d6d" : "#ff85a1";
+                ctx.fillRect(p.x+1, p.y+1, box-2, box-2);
             });
-        });
-        
-        document.getElementById('resetBtn').addEventListener('click', () => {
-            window.location.reload();
-        });
-        
-        function runConfettiFor(ms) {
-            const end = Date.now() + ms;
-            function tick() {
-                if (Date.now() < end) {
-                    createConfetti();
-                    setTimeout(tick, 80);
-                }
-            }
-            tick();
+            let headX = snake[0].x, headY = snake[0].y;
+            if(snakeDir==="left") headX-=box; if(snakeDir==="up") headY-=box;
+            if(snakeDir==="right") headX+=box; if(snakeDir==="down") headY-=box;
+            if(headX<0) headX=280; if(headX>280) headX=0; if(headY<0) headY=280; if(headY>280) headY=0;
+            if(headX===food.x && headY===food.y) {
+                snakeScore++; spawnFood(); updateSnakeUI();
+                if(snakeSpeed>90) { snakeSpeed-=7; runSnake(); }
+                if(snakeScore>=10) { clearInterval(snakeInterval); setTimeout(skipToQuestion, 500); }
+            } else { snake.pop(); }
+            let newHead = {x: headX, y: headY};
+            if(snake.some(p => p.x===newHead.x && p.y===newHead.y)) { startSnake(); return; }
+            snake.unshift(newHead);
         }
-        
+
+        // --- MEMORY LOGIC ---
+        function startMemory() {
+            switchView('memoryView');
+            const grid = document.getElementById('memoryGrid'); grid.innerHTML = '';
+            let matches = 0, flipped = [];
+            const meats = ['🍗','🍖','🥩','🥓','🌭','🍔','🥪','🥘'];
+            const deck = [...meats, ...meats].sort(()=>Math.random()-0.5);
+            deck.forEach(emoji => {
+                const card = document.createElement('div'); card.className = 'memory-card';
+                card.innerHTML = `<div class="back">❓</div><div class="front">${emoji}</div>`;
+                card.onclick = () => {
+                    if(card.classList.contains('flipped') || flipped.length === 2) return;
+                    card.classList.add('flipped'); flipped.push({card, emoji});
+                    if(flipped.length === 2) {
+                        if(flipped[0].emoji === flipped[1].emoji) { matches++; flipped = []; if(matches===8) setTimeout(skipToQuestion, 1000); }
+                        else { setTimeout(()=>{ flipped.forEach(f=>f.card.classList.remove('flipped')); flipped = []; }, 800); }
+                    }
+                };
+                grid.appendChild(card);
+            });
+        }
+
+        // --- CELEBRATION ---
+        function celebrate() {
+            switchView('successView');
+            for(let i=0; i<100; i++) setTimeout(createConfetti, i*20);
+        }
         function createConfetti() {
-            const confetti = document.createElement('div');
-            confetti.className = 'confetti';
-            confetti.style.left = Math.random() * 100 + '%';
-            confetti.style.top = '-10px';
-            confetti.style.background = ['#f093fb', '#f5576c', '#ffd700', '#4facfe', '#FFDAE9'][Math.floor(Math.random() * 5)];
-            const duration = 2 + Math.random() * 2;
-            confetti.style.animation = `confetti-fall ${duration}s linear`;
-            document.body.appendChild(confetti);
-            setTimeout(() => confetti.remove(), (duration + 0.5) * 1000);
+            const c = document.createElement('div'); c.className = 'confetti';
+            c.style.left = Math.random()*100+'vw'; c.style.backgroundColor = ['#ff4d6d','#ff85a1','#ffb3c1','#fb6f92'][Math.floor(Math.random()*4)];
+            c.style.top = '-10px'; document.body.appendChild(c);
+            const anim = c.animate([{top:'-10px',opacity:1},{top:'110vh',opacity:0}], {duration: 2000+Math.random()*3000});
+            anim.onfinish = () => c.remove();
         }
+
+        window.addEventListener('keydown', (e) => {
+            if(['ArrowUp','w'].includes(e.key)) setSnakeDir('up');
+            if(['ArrowDown','s'].includes(e.key)) setSnakeDir('down');
+            if(['ArrowLeft','a'].includes(e.key)) setSnakeDir('left');
+            if(['ArrowRight','d'].includes(e.key)) setSnakeDir('right');
+        });
     </script>
 </body>
 </html>
