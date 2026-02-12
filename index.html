@@ -579,7 +579,7 @@
             switchView('memoryView');
             const grid = document.getElementById('memoryGrid'); grid.innerHTML = '';
             let matches = 0, flipped = [];
-            const meats = ['🍗','🍖','🥩','🥓','🌭','🍔','🥪','🥘'];
+            const meats = ['🍗','🍖','🥩','🥓','🌭','🍔','🍣','🍆'];
             const deck = [...meats, ...meats].sort(()=>Math.random()-0.5);
             deck.forEach(emoji => {
                 const card = document.createElement('div'); card.className = 'memory-card';
