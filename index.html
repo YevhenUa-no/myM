@@ -353,7 +353,7 @@
                 </div>
             </div>
             <div class="puzzle-controls">
-                <button class="btn-small" onclick="scramblePuzzle(15); renderPuzzle();">Змішати (15)</button>
+                <button class="btn-small" onclick="scramblePuzzle(5); renderPuzzle();">Спростити</button>
             </div>
             <div class="puzzle-reveal-text" id="puzzleRevealText">
                 <p style="font-size: 1.1em; color: #d63384; margin-bottom: 15px;">...ти мене доповнюєш.</p>
@@ -441,11 +441,12 @@
             document.getElementById('puzzleFullImageOverlay').classList.remove('show');
             document.getElementById('puzzleGridWrap').classList.remove('revealing');
             document.getElementById('puzzleRevealText').classList.remove('show');
-            scramblePuzzle(15); // Set to 15 iterations as requested
+            scramblePuzzle(5); // Start with 5 iterations for ease
             renderPuzzle();
         }
 
         function scramblePuzzle(iterations) {
+            // Always start from original order (solution)
             currentPuzzleState = [...puzzleSolution];
             let lastMove = -1;
             for (let i = 0; i < iterations; i++) {
